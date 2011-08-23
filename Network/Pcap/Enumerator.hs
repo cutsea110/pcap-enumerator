@@ -1,14 +1,16 @@
 module Network.Pcap.Enumerator 
-       ( enumPcap
+       ( enumOffline
+       , enumLive
        ) where
 
 import Data.ByteString (ByteString)
 import Data.ByteString.Char8 ()
 import Data.Enumerator hiding (map, filter)
+import Data.Int (Int64)
 import Network.Pcap
 
-enumPcap :: FilePath -> Enumerator (PktHdr, ByteString) IO b
-enumPcap path step = do
+enumOffline :: FilePath -> Enumerator (PktHdr, ByteString) IO b
+enumOffline path step = do
   h <- tryIO $ openOffline path
   let iter = enumPcap1 h step
   Iteratee $ runIteratee iter
@@ -19,3 +21,9 @@ enumPcap1 h = checkContinue0 $ \lp k -> do
   if (hdrCaptureLength hdr == 0)
     then continue k
     else k (Chunks [pkt]) >>== lp
+
+enumLive :: String -> Int -> Bool -> Int64 -> Enumerator (PktHdr, ByteString) IO b
+enumLive name snaplen promisc timeout step = do
+  h <- tryIO $ openLive name snaplen promisc timeout
+  let iter = enumPcap1 h step
+  Iteratee $ runIteratee iter
