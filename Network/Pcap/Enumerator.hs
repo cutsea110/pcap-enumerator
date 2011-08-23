@@ -15,6 +15,12 @@ enumOffline path step = do
   let iter = enumPcap1 h step
   Iteratee $ runIteratee iter
 
+enumLive :: String -> Int -> Bool -> Int64 -> Enumerator (PktHdr, ByteString) IO b
+enumLive name snaplen promisc timeout step = do
+  h <- tryIO $ openLive name snaplen promisc timeout
+  let iter = enumPcap1 h step
+  Iteratee $ runIteratee iter
+
 enumPcap1 :: PcapHandle -> Enumerator (PktHdr, ByteString) IO b
 enumPcap1 h = checkContinue0 $ \lp k -> do
   pkt@(hdr, _) <- tryIO $ nextBS h
@@ -22,8 +28,3 @@ enumPcap1 h = checkContinue0 $ \lp k -> do
     then continue k
     else k (Chunks [pkt]) >>== lp
 
-enumLive :: String -> Int -> Bool -> Int64 -> Enumerator (PktHdr, ByteString) IO b
-enumLive name snaplen promisc timeout step = do
-  h <- tryIO $ openLive name snaplen promisc timeout
-  let iter = enumPcap1 h step
-  Iteratee $ runIteratee iter
