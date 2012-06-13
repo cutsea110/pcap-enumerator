@@ -3,7 +3,7 @@ module Network.Pcap.Enumerator
        , enumLive
        ) where
 
-import Control.Monad.State
+import Control.Monad.IO.Class
 import Data.ByteString (ByteString)
 import Data.ByteString.Char8 ()
 import Data.Enumerator hiding (map, filter)
