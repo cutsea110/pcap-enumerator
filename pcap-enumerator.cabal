@@ -9,7 +9,11 @@ Author:              Katsutoshi Itoh
 Maintainer:          cutsea110@gmail.com
 Category:            Network, Enumerator
 Build-type:          Simple
-Cabal-version:       >=1.2
+Cabal-version:       >=1.6
+
+Source-Repository head
+  type:              git
+  location:          http://github.com/cutsea110/pcap-enumerator
 
 Library
   Exposed-modules:     Network.Pcap.Enumerator
