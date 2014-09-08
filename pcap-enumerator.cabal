@@ -1,5 +1,5 @@
 Name:                pcap-enumerator
-Version:             0.4
+Version:             0.5
 Synopsis:            Convert a pcap into an enumerator.
 Description:         pcap enumerator package
 Homepage:            http://github.com/cutsea110/pcap-enumerator
